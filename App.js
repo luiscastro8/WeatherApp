@@ -1,51 +1,114 @@
-import { StatusBar } from 'expo-status-bar';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
+ */
+
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Platform, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  StatusBar,
+} from 'react-native';
 
-export default function App() {
+import {
+  Header,
+  LearnMoreLinks,
+  Colors,
+  DebugInstructions,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
+
+const App: () => React$Node = () => {
   return (
-    <TouchableWithoutFeedback onPress={() => { if (Platform.OS == 'ios') Keyboard.dismiss() }}>
-      <View style={styles.container}>
-        <Text>Welcome to the best weather app ever!</Text>
-        <Text>Insert ZIP Code</Text>
-        <TextInput style={styles.zipTextInput} keyboardAppearance='default' keyboardType='number-pad' maxLength={5} />
-        <StatusBar style="auto" />
-        <Button style={styles.submitButton} title="Submit" onPress={getWeatherFromAPI} />
-      </View>
-    </TouchableWithoutFeedback>
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={styles.scrollView}>
+          <Header />
+          {global.HermesInternal == null ? null : (
+            <View style={styles.engine}>
+              <Text style={styles.footer}>Engine: Hermes</Text>
+            </View>
+          )}
+          <View style={styles.body}>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Step One</Text>
+              <Text style={styles.sectionDescription}>
+                Edit <Text style={styles.highlight}>App.js</Text> to change this
+                screen and then come back to see your edits.
+              </Text>
+            </View>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>See Your Changes</Text>
+              <Text style={styles.sectionDescription}>
+                <ReloadInstructions />
+              </Text>
+            </View>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Debug</Text>
+              <Text style={styles.sectionDescription}>
+                <DebugInstructions />
+              </Text>
+            </View>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Learn More</Text>
+              <Text style={styles.sectionDescription}>
+                Read the docs to discover what to do next:
+              </Text>
+            </View>
+            <LearnMoreLinks />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
-}
-
-function getWeatherFromAPI() {
-  // TODO make it so the text input by the user is used in zipURL instead of '00000'
-  let zipURL = 'https://public.opendatasoft.com/api/records/1.0/search/?dataset=us-zip-code-latitude-and-longitude&q=' + '00000' + '&facet=state&facet=timezone&facet=dst'
-  let coordURL = 'https://api.weather.gov/points/'
-  fetch(zipURL, {
-    method: 'GET',
-  })
-    .then((response) => response.json())
-    .then((json) => fetch(coordURL + json.records[0].fields.latitude + "," + json.records[0].fields.longitude))
-    .then((response) => response.json())
-    .then((json) => fetch(json.properties.forecast))
-    .then((response) => response.json())
-    .then((json) => console.log(json))
-    .catch((error) => console.error(error));
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    marginTop: 30,
+  scrollView: {
+    backgroundColor: Colors.lighter,
   },
-  zipTextInput: {
-    borderStyle: 'solid',
-    borderWidth: 1,
-    width: 100,
+  engine: {
+    position: 'absolute',
+    right: 0,
   },
-  submitButton: {
-    marginTop: 300,
-    paddingTop: 300,
+  body: {
+    backgroundColor: Colors.white,
+  },
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: Colors.black,
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+    color: Colors.dark,
+  },
+  highlight: {
+    fontWeight: '700',
+  },
+  footer: {
+    color: Colors.dark,
+    fontSize: 12,
+    fontWeight: '600',
+    padding: 4,
+    paddingRight: 12,
+    textAlign: 'right',
   },
 });
+
+export default App;
