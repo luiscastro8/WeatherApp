@@ -7,7 +7,7 @@ class App extends React.Component {
     this.state = {};
     this.state.weather = [];
     this.state.zip = '';
-    console.log('hi')
+    this.state.isLoading = false;
   }
 
   getWeatherFromAPI(zip) {
@@ -18,6 +18,7 @@ class App extends React.Component {
 
     let zipURL = 'https://public.opendatasoft.com/api/records/1.0/search/?dataset=us-zip-code-latitude-and-longitude&q=' + zip + '&facet=state&facet=timezone&facet=dst'
     let coordURL = 'https://api.weather.gov/points/'
+    this.setState({isLoading: true})
     fetch(zipURL, {
       method: 'GET',
     })
@@ -33,7 +34,8 @@ class App extends React.Component {
       .then((json) => fetch(json.properties.forecast))
       .then((response) => response.json())
       .then((json) => this.setState({ weather: json.properties.periods }))
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => this.setState({isLoading: false}));
   }
 
   static validateZipCode(zip) {
@@ -74,7 +76,7 @@ class App extends React.Component {
           <Text>Insert ZIP Code</Text>
           <TextInput style={this.styles.zipTextInput} keyboardAppearance='default' keyboardType='number-pad' maxLength={5} onChangeText={(text) => this.setState({ zip: text })} />
           <Button style={this.styles.submitButton} title="Submit" onPress={() => this.getWeatherFromAPI(this.state.zip)} />
-          <ActivityIndicator animating={true} size='large'/>
+          <ActivityIndicator animating={this.state.isLoading} size='large'/>
           <ScrollView>
             {
               this.state.weather.map((period) => {
