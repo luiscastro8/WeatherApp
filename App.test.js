@@ -1,4 +1,6 @@
-import { validateZipCode } from './App';
+import App from './App';
+
+validateZipCode = App.validateZipCode;
 
 test('Given a valid zip code, validateZipCode returns true', () => {
     expect(validateZipCode('12345')).toBe(true);
