@@ -25,7 +25,11 @@ export default function App() {
 }
 
 function getWeatherFromAPI(setWeather, zip) {
-  // TODO make it so the text input by the user is used in zipURL instead of '00000'
+  if (!validateZipCode(zip)) {
+    console.error("Invalid Zip Code");
+    return;
+  }
+
   let zipURL = 'https://public.opendatasoft.com/api/records/1.0/search/?dataset=us-zip-code-latitude-and-longitude&q=' + zip + '&facet=state&facet=timezone&facet=dst'
   let coordURL = 'https://api.weather.gov/points/'
   fetch(zipURL, {
@@ -46,6 +50,25 @@ function getWeatherFromAPI(setWeather, zip) {
     .catch((error) => console.error(error));
 }
 
+function validateZipCode(zip) {
+  // length === 5
+  // is integer
+  // is positive
+
+  let num = parseInt(zip, 10);
+  if (num == NaN) {
+    return false;
+  }
+
+  return true;
+}
+
+function isInt(value) {
+  return !isNaN(value) && 
+         parseInt(Number(value)) == value && 
+         !isNaN(parseInt(value, 10));
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -63,3 +86,5 @@ const styles = StyleSheet.create({
     paddingTop: 300,
   },
 });
+
+module.exports = { isInt };
