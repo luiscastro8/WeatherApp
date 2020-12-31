@@ -51,22 +51,15 @@ function getWeatherFromAPI(setWeather, zip) {
 }
 
 function validateZipCode(zip) {
-  // length === 5
-  // is integer
-  // is positive
+  if (zip.length != 5) {
+    return false;
+  }
 
-  let num = parseInt(zip, 10);
-  if (num == NaN) {
+  if (!/^\d+$/.test(zip)) {
     return false;
   }
 
   return true;
-}
-
-function isInt(value) {
-  return !isNaN(value) && 
-         parseInt(Number(value)) == value && 
-         !isNaN(parseInt(value, 10));
 }
 
 const styles = StyleSheet.create({
@@ -87,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = { isInt };
+module.exports = { validateZipCode };
